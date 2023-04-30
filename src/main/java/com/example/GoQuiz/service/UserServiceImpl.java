@@ -1,14 +1,8 @@
 package com.example.GoQuiz.service;
 
-import com.example.GoQuiz.config.SecurityConfig;
-import com.example.GoQuiz.dto.UserDto;
-import com.example.GoQuiz.exceptions.EmailAlreadyExistsException;
-import com.example.GoQuiz.exceptions.PasswordTooWeakException;
 import com.example.GoQuiz.exceptions.UserNotFoundException;
-import com.example.GoQuiz.exceptions.UsernameAlreadyExistsException;
 import com.example.GoQuiz.model.User;
 import com.example.GoQuiz.repository.UserRepository;
-import com.example.GoQuiz.util.PasswordValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +11,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     private final UserRepository repository;
 
     @Override

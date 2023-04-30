@@ -9,7 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
-
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
@@ -20,15 +19,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public class JwtTokenProvider {
-    @Value("${app.jwt.secret}")
-    private String jwtSecret;
-
-    @Value("${app.jwt.expiration-in-ms}")
-    private Long jwtExpirationInMs;
-
     public static final String TOKEN_TYPE = "JWT";
     public static final String TOKEN_ISSUER = "goquiz-api";
     public static final String TOKEN_AUDIENCE = "goquiz-app";
+    @Value("${app.jwt.secret}")
+    private String jwtSecret;
+    @Value("${app.jwt.expiration-in-ms}")
+    private Long jwtExpirationInMs;
 
     public String generate(Authentication authentication) {
         UserDetailsImpl user = (UserDetailsImpl) authentication.getPrincipal();
