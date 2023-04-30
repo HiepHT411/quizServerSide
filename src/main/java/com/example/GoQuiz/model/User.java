@@ -18,13 +18,15 @@ public class User {
 
     private String email;
 
+    private String role;
+
     private boolean enabled;
 
     public static User from(UserDto userDto) {
         User user = new User();
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
-        user.setEnabled(false);
+        user.setEnabled(true);
         return user;
     }
 }
