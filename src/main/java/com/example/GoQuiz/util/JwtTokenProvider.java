@@ -38,14 +38,14 @@ public class JwtTokenProvider {
         byte[] signingKey = jwtSecret.getBytes();
 
         return Jwts.builder()
-                .setHeaderParam("typ", TOKEN_TYPE)
+                .setHeaderParam("type", TOKEN_TYPE)
                 .signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
                 .setExpiration(Date.from(ZonedDateTime.now().plusMinutes(jwtExpirationInMs).toInstant()))
                 .setIssuedAt(Date.from(ZonedDateTime.now().toInstant()))
                 .setId(UUID.randomUUID().toString())
                 .setIssuer(TOKEN_ISSUER)
                 .setAudience(TOKEN_AUDIENCE)
-                .setSubject(user.getUsername())
+                .setSubject(user.getEmail())
                 .claim("role", roles)
                 .claim("preferred_username", user.getUsername())
                 .claim("email", user.getEmail())

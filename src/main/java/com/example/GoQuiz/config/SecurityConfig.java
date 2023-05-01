@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/users/me").hasAnyAuthority(ADMIN, USER)
                 .requestMatchers("/api/quizzes", "/api/quizzes/**").hasAuthority(ADMIN)
                 .requestMatchers("/api/users", "/api/users/**").hasAuthority(ADMIN)
-                .requestMatchers("/public/**", "/auth/**").permitAll()
+                .requestMatchers("/api/public/**", "/api/auth/**").permitAll()
                 .requestMatchers("/", "/error", "/csrf", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated();
         http.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
