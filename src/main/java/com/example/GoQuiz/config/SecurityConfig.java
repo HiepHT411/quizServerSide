@@ -35,7 +35,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST, "/api/quizzes").hasAnyAuthority(ADMIN, USER)
+                .requestMatchers(HttpMethod.POST, "/api/quizzes/**").hasAnyAuthority(ADMIN, USER)
+                .requestMatchers(HttpMethod.PUT, "/api/quizzes/**").hasAnyAuthority(ADMIN, USER)
+                .requestMatchers(HttpMethod.DELETE, "/api/quizzes/**").hasAnyAuthority(ADMIN, USER)
+                .requestMatchers(HttpMethod.GET, "/api/quizzes/**").hasAnyAuthority(ADMIN, USER)
                 .requestMatchers(HttpMethod.GET, "/api/users/me").hasAnyAuthority(ADMIN, USER)
                 .requestMatchers("/api/quizzes", "/api/quizzes/**").hasAuthority(ADMIN)
                 .requestMatchers("/api/users", "/api/users/**").hasAuthority(ADMIN)

@@ -4,6 +4,7 @@ import com.example.GoQuiz.model.Answer;
 import com.example.GoQuiz.model.Question;
 import com.example.GoQuiz.model.QuestionType;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.executable.ValidateOnExecution;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +17,7 @@ public class QuestionDto {
     private Long id;
     @NotBlank
     private String prompt;
-    @NotBlank
+
     private QuestionType type;
 
     private List<AnswerDto> answers = new ArrayList<>();
