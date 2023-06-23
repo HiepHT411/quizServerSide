@@ -9,6 +9,8 @@ class RegisterScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  RegisterScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,12 +49,18 @@ class RegisterScreen extends StatelessWidget {
                 final username = usernameController.text;
                 final email = emailController.text;
                 final password = passwordController.text;
-                final success =
+
+                final AuthenticationResult result =
                     await authProvider.register(username, email, password);
-                if (success) {
-                  // Navigate to the login screen upon successful registration
+                if (result.success) {
                   Navigator.pushReplacementNamed(
                       context, AppRoutes.login.toString());
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(result.errorMessage),
+                    ),
+                  );
                 }
               },
               child: Text('Register'),

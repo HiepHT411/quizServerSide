@@ -10,7 +10,7 @@ public class SignupRequest {
     private String username;
 
     @NotBlank
-    @Email
+    @Email(message = "Email not valid")
     private String email;
 
     @NotBlank

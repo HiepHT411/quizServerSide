@@ -1,14 +1,27 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:goquiz_ui/constants/api_endpoints.dart';
 
-class AuthenticationProvider {
-  final String apiUrl = '$API_URL/auth';
+class AuthenticationResult {
+  final bool success;
+  final String errorMessage;
 
-  Future<bool> login(String email, String password) async {
+  AuthenticationResult({
+    required this.success,
+    this.errorMessage = '',
+  });
+}
+
+class AuthenticationProvider with ChangeNotifier{
+  String _accessToken = '';
+
+  String get accessToken => _accessToken;
+
+  Future<AuthenticationResult> login(String email, String password) async {
     final response = await http.post(
-      Uri.parse('$apiUrl/authenticate'),
+      Uri.parse('$API_URL/auth/authenticate'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -17,22 +30,22 @@ class AuthenticationProvider {
         'password': password,
       }),
     );
+    log("login: ${response.statusCode}");
 
     if (response.statusCode == 200) {
-      // Authentication successful
-      // You can handle the response here, e.g., store the user token
+      final token = jsonDecode(response.body)['accessToken'];
+      _accessToken = token;
 
-      return true;
+      return AuthenticationResult(success: true);
     } else {
-      // Authentication failed
-      // You can handle the response here, e.g., display an error message
-      return false;
+      const errorMessage = 'Authentication failed: Email or password is incorrect';
+      return AuthenticationResult(success: false, errorMessage: errorMessage);
     }
   }
 
-  Future<bool> register(String username, String email, String password) async {
+  Future<AuthenticationResult> register(String username, String email, String password) async {
     final response = await http.post(
-      Uri.parse('$apiUrl/signup'),
+      Uri.parse('$API_URL/auth/signup'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -43,16 +56,14 @@ class AuthenticationProvider {
       }),
     );
 
-    if (response.statusCode == 200) {
-      // Registration successful
-      // You can handle the response here, e.g., navigate to the login screen
-      //TODO
-      return true;
+    log('signup: ${response.statusCode}');
+
+    if (response.statusCode == 201) {
+      return AuthenticationResult(success: true);
     } else {
-      // Registration failed
-      // You can handle the response here, e.g., display an error message
-      //TODO
-      return false;
+      final errorJson = jsonDecode(response.body);
+      final errorMessage = errorJson['message'] ?? 'Registration failed';
+      return AuthenticationResult(success: false, errorMessage: errorMessage);
     }
   }
 }

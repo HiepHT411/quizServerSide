@@ -8,15 +8,17 @@ public class PasswordValidator {
     public static boolean check(String password) {
 
         if (password.length() >= 8) {
-            Pattern letter = Pattern.compile("[a-zA-z]");
+            Pattern upperCase = Pattern.compile("[A-Z]");
+            Pattern lowerCase = Pattern.compile("[a-z]");
             Pattern digit = Pattern.compile("[0-9]");
             Pattern special = Pattern.compile("[!@#$%&*()_+=|<>?{}\\[\\]~-]");
 
-            Matcher hasLetter = letter.matcher(password);
+            Matcher hasUpper = upperCase.matcher(password);
+            Matcher hasLower = lowerCase.matcher(password);
             Matcher hasDigit = digit.matcher(password);
             Matcher hasSpecial = special.matcher(password);
 
-            return hasLetter.find() && hasDigit.find() && hasSpecial.find();
+            return hasUpper.find() && hasLower.find() && hasDigit.find() && hasSpecial.find();
 
         } else
             return false;
