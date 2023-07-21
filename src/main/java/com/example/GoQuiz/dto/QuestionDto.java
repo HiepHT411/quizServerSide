@@ -4,7 +4,6 @@ import com.example.GoQuiz.model.Answer;
 import com.example.GoQuiz.model.Question;
 import com.example.GoQuiz.model.QuestionType;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.executable.ValidateOnExecution;
 import lombok.Getter;
 import lombok.Setter;
 
