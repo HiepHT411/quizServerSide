@@ -8,6 +8,8 @@ class RegisterScreen extends StatelessWidget {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   RegisterScreen({super.key});
 
@@ -44,21 +46,36 @@ class RegisterScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 16.0),
+            TextField(
+              controller: confirmPasswordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'Confirm Password',
+              ),
+            ),
+            SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () async {
                 final username = usernameController.text;
                 final email = emailController.text;
                 final password = passwordController.text;
+                final confirmPassword = confirmPasswordController.text;
 
                 final AuthenticationResult result =
                     await authProvider.register(username, email, password);
-                if (result.success) {
+                if (result.success && password == confirmPassword) {
                   Navigator.pushReplacementNamed(
                       context, AppRoutes.login.toString());
-                } else {
+                } else if (!result.success) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(result.errorMessage),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Passwords do not match.'),
                     ),
                   );
                 }

@@ -20,7 +20,6 @@ public class Question {
     private String prompt;
 
     @Enumerated(EnumType.STRING)
-    private QuestionType type;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_id")
@@ -34,7 +33,6 @@ public class Question {
         Question question = new Question();
         question.setId(questionDto.getId());
         question.setPrompt(questionDto.getPrompt());
-        question.setType(questionDto.getType());
         for(AnswerDto answerDto : questionDto.getAnswers()) {
             question.getAnswers().add(Answer.fromDto(answerDto));
         }

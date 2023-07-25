@@ -37,13 +37,15 @@ class _QuizListScreenState extends State<QuizListScreen> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _loadQuizzes,
+            tooltip: "Refresh",
           ),
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
             onPressed: () {
               Navigator.pushReplacementNamed(
                   context, AppRoutes.login.toString());
             },
+            tooltip: "Logout",
           )
         ],
       ),

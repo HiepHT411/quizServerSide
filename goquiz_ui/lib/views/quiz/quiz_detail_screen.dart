@@ -25,7 +25,12 @@ class QuizDetailScreen extends StatelessWidget {
             onPressed: () {
               // TODO: Handle adding a question
             },
-          )
+          ),
+          IconButton(
+              icon: const Icon(Icons.play_arrow),
+              onPressed: () {
+                // TODO: Handle starting the quiz
+              })
         ],
       ),
       body: _buildQuizQuestionsList(),
