@@ -50,6 +50,12 @@ class _QuizListScreenState extends State<QuizListScreen> {
         ],
       ),
       body: _buildQuizList(_quizzes),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // TODO: Handle creating a new quiz
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 

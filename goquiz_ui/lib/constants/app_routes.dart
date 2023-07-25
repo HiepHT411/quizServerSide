@@ -1,9 +1,9 @@
-enum AppRoutes {
-  login,
-  register,
-  quizList,
-  quizDetail,
-  quizForm,
-  questionDetail,
-  questionForm,
+class AppRoutes {
+  static const String login = 'login';
+  static const String register = 'register';
+  static const String quizList = 'quizList';
+  static const String quizDetail = 'quizDetail';
+  static const String quizForm = 'quizForm';
+  static const String questionDetail = 'questionDetail';
+  static const String questionForm = 'questionForm';
 }

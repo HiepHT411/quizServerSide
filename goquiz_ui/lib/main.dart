@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:goquiz_ui/constants/app_routes.dart';
 import 'package:goquiz_ui/views/auth/login_screen.dart';
 import 'package:goquiz_ui/views/auth/register_screen.dart';
+import 'package:goquiz_ui/views/question/question_form_screen.dart';
 import 'package:goquiz_ui/views/quiz/quiz_detail_screen.dart';
 import 'package:goquiz_ui/views/quiz/quiz_list_screen.dart';
+
+import 'models/quiz.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,13 +22,27 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: AppRoutes.login.toString(),
-      routes: {
-        AppRoutes.login.toString(): (context) => LoginScreen(),
-        AppRoutes.register.toString(): (context) => RegisterScreen(),
-        AppRoutes.quizList.toString(): (context) => QuizListScreen(),
-        AppRoutes.quizDetail.toString(): (context) => QuizDetailScreen(),
-        // TODO: Add other routes
+      initialRoute: AppRoutes.login,
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case AppRoutes.login:
+            return MaterialPageRoute(builder: (context) => LoginScreen());
+          case AppRoutes.register:
+            return MaterialPageRoute(builder: (context) => RegisterScreen());
+          case AppRoutes.quizList:
+            return MaterialPageRoute(
+                builder: (context) => const QuizListScreen());
+          case AppRoutes.quizDetail:
+            return MaterialPageRoute(
+                builder: (context) =>
+                    QuizDetailScreen(quiz: settings.arguments as Quiz));
+          case AppRoutes.questionForm:
+            return MaterialPageRoute(
+                builder: (context) =>
+                    QuestionFormScreen(quizID: settings.arguments as int));
+          default:
+            return MaterialPageRoute(builder: (context) => LoginScreen());
+        }
       },
     );
   }

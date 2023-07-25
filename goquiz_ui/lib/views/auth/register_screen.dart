@@ -20,7 +20,7 @@ class RegisterScreen extends StatelessWidget {
         title: Text('Register'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

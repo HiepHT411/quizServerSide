@@ -1,30 +1,39 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:goquiz_ui/models/question.dart';
 import 'package:goquiz_ui/models/quiz.dart';
+import 'package:goquiz_ui/providers/quiz_provider.dart';
 
-class QuizDetailScreen extends StatelessWidget {
-  late Quiz quiz;
+import '../../constants/app_routes.dart';
 
-  QuizDetailScreen({super.key});
+class QuizDetailScreen extends StatefulWidget {
+  final Quiz quiz;
+
+  const QuizDetailScreen({super.key, required this.quiz});
+
+  @override
+  _QuizDetailScreenState createState() => _QuizDetailScreenState();
+}
+
+class _QuizDetailScreenState extends State<QuizDetailScreen> {
+  late Quiz _quiz;
+
+  @override
+  void initState() {
+    _quiz = widget.quiz;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    quiz = ModalRoute.of(context)!.settings.arguments as Quiz;
     return Scaffold(
       appBar: AppBar(
-        title: Text(quiz.title),
+        title: Text(_quiz.title),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
-            onPressed: () {
-              // TODO: Handle modifying the quiz
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              // TODO: Handle adding a question
-            },
+            onPressed: _showEditDialog,
           ),
           IconButton(
               icon: const Icon(Icons.play_arrow),
@@ -34,14 +43,20 @@ class QuizDetailScreen extends StatelessWidget {
         ],
       ),
       body: _buildQuizQuestionsList(),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.pushNamed(context, AppRoutes.questionForm,
+                arguments: _quiz.id);
+          },
+          child: const Icon(Icons.add)),
     );
   }
 
   Widget _buildQuizQuestionsList() {
-    final List<Question> questions = quiz.questions;
+    final List<Question> questions = _quiz.questions;
 
     if (questions.isEmpty) {
-      return Center(
+      return const Center(
         child: Text('No questions available.'),
       );
     }
@@ -60,9 +75,77 @@ class QuizDetailScreen extends StatelessWidget {
       child: ListTile(
         title: Text(question.questionText),
         onTap: () {
-          // TODO: Handle tapping on a question item
+          // TODO: Handle tapping on a question item, should navigate to the question detail screen
         },
       ),
     );
+  }
+
+  Future<void> _saveEdit(String title, String description) async {
+    final quizProvider = QuizProvider();
+    try {
+      Quiz tmpQuiz =
+          await quizProvider.updateQuiz(_quiz.id, title, description);
+      setState(() {
+        _quiz = tmpQuiz;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(e.toString()),
+      ));
+    }
+    Navigator.of(context).pop();
+  }
+
+  void _showEditDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          final TextEditingController titleController =
+              TextEditingController(text: _quiz.title);
+          final TextEditingController descriptionController =
+              TextEditingController(text: _quiz.description);
+
+          return AlertDialog(
+              content: Stack(
+            children: <Widget>[
+              const Text("Edit Quiz",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              Form(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: titleController,
+                        decoration: const InputDecoration(
+                          labelText: 'Title',
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: descriptionController,
+                        decoration: const InputDecoration(
+                          labelText: 'Description',
+                        ),
+                      ),
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                            child: const Text("Save"),
+                            onPressed: () {
+                              _saveEdit(titleController.text,
+                                  descriptionController.text);
+                            }))
+                  ],
+                ),
+              ),
+            ],
+          ));
+        });
   }
 }
