@@ -94,7 +94,7 @@ class _QuizListScreenState extends State<QuizListScreen> {
                 ],
               ),
               onTap: () {
-                // TODO: Handle deleting the quiz
+                _deleteQuiz(quiz);
               },
             )
           ],
@@ -184,6 +184,20 @@ class _QuizListScreenState extends State<QuizListScreen> {
       ));
     } finally {
       Navigator.of(context).pop();
+    }
+  }
+
+  Future<void> _deleteQuiz(Quiz quiz) async {
+    final quizProvider = QuizProvider();
+    try {
+      await quizProvider.deleteQuiz(quiz.id);
+      setState(() {
+        _quizzes.removeWhere((element) => element.id == quiz.id);
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(e.toString()),
+      ));
     }
   }
 }

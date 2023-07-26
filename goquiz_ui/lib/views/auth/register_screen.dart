@@ -61,21 +61,23 @@ class RegisterScreen extends StatelessWidget {
                 final password = passwordController.text;
                 final confirmPassword = confirmPasswordController.text;
 
-                final AuthenticationResult result =
-                    await authProvider.register(username, email, password);
-                if (result.success && password == confirmPassword) {
-                  Navigator.pushReplacementNamed(
-                      context, AppRoutes.login.toString());
-                } else if (!result.success) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(result.errorMessage),
-                    ),
-                  );
-                } else {
+                if (password != confirmPassword) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Passwords do not match.'),
+                    ),
+                  );
+                  return;
+                }
+                final AuthenticationResult result =
+                    await authProvider.register(username, email, password);
+                if (result.success) {
+                  Navigator.pushReplacementNamed(
+                      context, AppRoutes.login.toString());
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(result.errorMessage),
                     ),
                   );
                 }

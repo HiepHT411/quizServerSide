@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:goquiz_ui/models/question.dart';
+import 'package:goquiz_ui/views/question/question_form_screen.dart';
 
+import '../../constants/app_routes.dart';
 import '../../models/answer.dart';
+import '../../models/quiz.dart';
 
 class QuestionDetailScreen extends StatefulWidget {
   final Question question;
@@ -14,21 +17,42 @@ class QuestionDetailScreen extends StatefulWidget {
 }
 
 class _QuestionDetailScreenState extends State<QuestionDetailScreen> {
+  late Question question;
+
+  @override
+  void initState() {
+    super.initState();
+    question = widget.question;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-              icon: Icon(Icons.edit),
-              tooltip: "Edit Question",
-              onPressed: () async {
-                // TODO: Handle editing the question
-              })
-        ],
-        title: const Text('Question Detail'),
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.pop(context, question);
+        return Future.value(true);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.edit),
+                tooltip: "Edit Question",
+                onPressed: () async {
+                  Quiz tmpQuiz = await Navigator.pushNamed(
+                      context, AppRoutes.questionForm,
+                      arguments: QuestionFormScreenArgs(
+                          quizID: question.quizID, question: question)) as Quiz;
+                  setState(() {
+                    question = tmpQuiz.questions
+                        .firstWhere((q) => q.id == question.id);
+                  });
+                })
+          ],
+          title: const Text('Question Detail'),
+        ),
+        body: _buildQuestionDetail(),
       ),
-      body: _buildQuestionDetail(),
     );
   }
 
@@ -40,7 +64,7 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen> {
           children: [
             Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Text(widget.question.questionText,
+                child: Text(question.questionText,
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold))),
           ],
@@ -56,7 +80,7 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen> {
   }
 
   Widget _answerListBuilder() {
-    final List<Answer> answers = widget.question.answers;
+    final List<Answer> answers = question.answers;
 
     if (answers.isEmpty) {
       return const Center(

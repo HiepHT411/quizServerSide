@@ -39,9 +39,12 @@ class MyApp extends StatelessWidget {
                 builder: (context) =>
                     QuizDetailScreen(quiz: settings.arguments as Quiz));
           case AppRoutes.questionForm:
-            return MaterialPageRoute(
-                builder: (context) =>
-                    QuestionFormScreen(quizID: settings.arguments as int));
+            return MaterialPageRoute(builder: (context) {
+              final args = settings.arguments as QuestionFormScreenArgs;
+              return QuestionFormScreen(
+                  quizID: args.quizID, question: args.question);
+            });
+
           case AppRoutes.questionDetail:
             return MaterialPageRoute(
                 builder: (context) => QuestionDetailScreen(

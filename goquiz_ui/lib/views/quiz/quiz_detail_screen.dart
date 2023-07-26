@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:goquiz_ui/models/question.dart';
 import 'package:goquiz_ui/models/quiz.dart';
 import 'package:goquiz_ui/providers/quiz_provider.dart';
+import 'package:goquiz_ui/views/question/question_form_screen.dart';
 
 import '../../constants/app_routes.dart';
 
@@ -53,9 +54,11 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
           floatingActionButton: FloatingActionButton(
               tooltip: "Add Question",
               onPressed: () async {
+                QuestionFormScreenArgs args =
+                    QuestionFormScreenArgs(quizID: _quiz.id);
                 Quiz tmpQuiz = await Navigator.pushNamed(
-                        context, AppRoutes.questionForm, arguments: _quiz.id)
-                    as Quiz;
+                    context, AppRoutes.questionForm,
+                    arguments: args) as Quiz;
                 setState(() {
                   _quiz = tmpQuiz;
                 });
@@ -87,9 +90,15 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
       child: Card(
         child: ListTile(
           title: Text(question.questionText),
-          onTap: () {
-            Navigator.pushNamed(context, AppRoutes.questionDetail,
-                arguments: question);
+          onTap: () async {
+            Question tmpQuestion = await Navigator.pushNamed(
+                    context, AppRoutes.questionDetail, arguments: question)
+                as Question;
+            setState(() {
+              // update _quiz with the edited question
+              _quiz.questions[_quiz.questions
+                  .indexWhere((q) => q.id == tmpQuestion.id)] = tmpQuestion;
+            });
           },
         ),
       ),
@@ -111,7 +120,7 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                 ],
               ),
               onTap: () {
-                // TODO: Handle deleting the question
+                _deleteQuestion(question);
               },
             )
           ],
@@ -187,5 +196,19 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
             ],
           ));
         });
+  }
+
+  Future<void> _deleteQuestion(Question question) async {
+    final quizProvider = QuizProvider();
+    try {
+      await quizProvider.deleteQuestion(question.quizID, question.id);
+      setState(() {
+        _quiz.questions.removeWhere((q) => q.id == question.id);
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(e.toString()),
+      ));
+    }
   }
 }
