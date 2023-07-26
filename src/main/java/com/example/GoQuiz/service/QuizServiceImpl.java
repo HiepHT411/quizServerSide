@@ -70,6 +70,35 @@ public class QuizServiceImpl implements QuizService{
     }
 
     @Override
+    public Quiz updateQuestion(Long id, Long questionId, QuestionDto questionDto) {
+        Optional<Quiz> quiz = repository.findById(id);
+        if (quiz.isEmpty()) {
+            return null;
+        }
+        for (Question question : quiz.get().getQuestions()) {
+            if (question.getId().equals(questionId)) {
+                question.setPrompt(questionDto.getPrompt());
+                question.getAnswers().clear();
+                for(AnswerDto answerDto : questionDto.getAnswers()) {
+                    question.getAnswers().add(Answer.fromDto(answerDto));
+                }
+            }
+        }
+        return repository.save(quiz.get());
+    }
+
+    @Override
+    public void deleteQuestion(Quiz quiz, Long questionId) {
+        for (Question question : quiz.getQuestions()) {
+            if (question.getId().equals(questionId)) {
+                quiz.getQuestions().remove(question);
+                break;
+            }
+        }
+        repository.save(quiz);
+    }
+
+    @Override
     public void deleteQuiz(Quiz quiz) {
         repository.delete(quiz);
     }

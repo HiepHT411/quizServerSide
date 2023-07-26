@@ -111,7 +111,7 @@ class QuizProvider with ChangeNotifier {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $authToken'
         });
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       final data = jsonDecode(response.body);
       notifyListeners();
       return Quiz(

@@ -16,4 +16,6 @@ public interface QuizService {
     void deleteQuiz(Quiz quiz);
     Quiz addQuestionToQuiz(Long id, QuestionDto questionDto);
     Quiz addAnswerToQuestion(Long id, Long questionId, AnswerDto answerDto);
+    Quiz updateQuestion(Long id, Long questionId, QuestionDto questionDto);
+    void deleteQuestion(Quiz quiz, Long questionId);
 }
