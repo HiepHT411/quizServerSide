@@ -38,10 +38,12 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
             actions: [
               IconButton(
                 icon: const Icon(Icons.edit),
+                tooltip: "Edit Quiz",
                 onPressed: _showEditDialog,
               ),
               IconButton(
                   icon: const Icon(Icons.play_arrow),
+                  tooltip: "Start Quiz",
                   onPressed: () {
                     // TODO: Handle starting the quiz
                   })
@@ -81,13 +83,40 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
   }
 
   Widget _buildQuestionTile(BuildContext context, Question question) {
-    return Card(
-      child: ListTile(
-        title: Text(question.questionText),
-        onTap: () {
-          // TODO: Handle tapping on a question item, should navigate to the question detail screen
-        },
+    return GestureDetector(
+      child: Card(
+        child: ListTile(
+          title: Text(question.questionText),
+          onTap: () {
+            Navigator.pushNamed(context, AppRoutes.questionDetail,
+                arguments: question);
+          },
+        ),
       ),
+      onTapDown: (TapDownDetails details) {
+        final screenSize = MediaQuery.of(context).size;
+        showMenu(
+          context: context,
+          position: RelativeRect.fromLTRB(
+              details.globalPosition.dx,
+              details.globalPosition.dy,
+              screenSize.width - details.globalPosition.dx,
+              screenSize.height - details.globalPosition.dy),
+          items: <PopupMenuEntry>[
+            PopupMenuItem(
+              child: Row(
+                children: const <Widget>[
+                  Icon(Icons.delete),
+                  Text("Delete"),
+                ],
+              ),
+              onTap: () {
+                // TODO: Handle deleting the question
+              },
+            )
+          ],
+        );
+      },
     );
   }
 

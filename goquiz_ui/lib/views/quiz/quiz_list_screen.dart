@@ -75,19 +75,47 @@ class _QuizListScreenState extends State<QuizListScreen> {
   }
 
   Widget _buildQuizTile(BuildContext context, Quiz quiz) {
-    return Card(
-      child: ListTile(
-        title: Text(quiz.title),
-        subtitle: Text(quiz.description),
-        onTap: () async {
-          Quiz tmpQuiz = await Navigator.pushNamed(
-                  context, AppRoutes.quizDetail.toString(), arguments: quiz)
-              as Quiz;
-          setState(() {
-            _quizzes[_quizzes
-                .indexWhere((element) => element.id == tmpQuiz.id)] = tmpQuiz;
-          });
-        },
+    return GestureDetector(
+      onTapDown: (details) {
+        final screenSize = MediaQuery.of(context).size;
+        showMenu(
+          context: context,
+          position: RelativeRect.fromLTRB(
+              details.globalPosition.dx,
+              details.globalPosition.dy,
+              screenSize.width - details.globalPosition.dx,
+              screenSize.height - details.globalPosition.dy),
+          items: <PopupMenuEntry>[
+            PopupMenuItem(
+              child: Row(
+                children: const <Widget>[
+                  Icon(Icons.delete),
+                  Text("Delete"),
+                ],
+              ),
+              onTap: () {
+                // TODO: Handle deleting the quiz
+              },
+            )
+          ],
+        );
+      },
+      child: Card(
+        child: ListTile(
+          title: Text(quiz.title),
+          subtitle: Text(quiz.description),
+          onTap: () async {
+            Quiz tmpQuiz = await Navigator.pushNamed(
+                    context, AppRoutes.quizDetail.toString(), arguments: quiz)
+                as Quiz;
+            setState(
+              () {
+                _quizzes[_quizzes.indexWhere(
+                    (element) => element.id == tmpQuiz.id)] = tmpQuiz;
+              },
+            );
+          },
+        ),
       ),
     );
   }
