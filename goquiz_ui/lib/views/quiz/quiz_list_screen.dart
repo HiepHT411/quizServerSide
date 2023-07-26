@@ -51,9 +51,8 @@ class _QuizListScreenState extends State<QuizListScreen> {
       ),
       body: _buildQuizList(_quizzes),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: Handle creating a new quiz
-        },
+        tooltip: "Add Quiz",
+        onPressed: _addQuiz,
         child: const Icon(Icons.add),
       ),
     );
@@ -80,11 +79,83 @@ class _QuizListScreenState extends State<QuizListScreen> {
       child: ListTile(
         title: Text(quiz.title),
         subtitle: Text(quiz.description),
-        onTap: () {
-          Navigator.pushNamed(context, AppRoutes.quizDetail.toString(),
-              arguments: quiz);
+        onTap: () async {
+          Quiz tmpQuiz = await Navigator.pushNamed(
+                  context, AppRoutes.quizDetail.toString(), arguments: quiz)
+              as Quiz;
+          setState(() {
+            _quizzes[_quizzes
+                .indexWhere((element) => element.id == tmpQuiz.id)] = tmpQuiz;
+          });
         },
       ),
     );
+  }
+
+  void _addQuiz() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          final TextEditingController titleController = TextEditingController();
+          final TextEditingController descriptionController =
+              TextEditingController();
+
+          return AlertDialog(
+              content: Stack(
+            children: <Widget>[
+              const Text("Add Quiz",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              Form(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: titleController,
+                        decoration: const InputDecoration(
+                          labelText: 'Title',
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: descriptionController,
+                        decoration: const InputDecoration(
+                          labelText: 'Description',
+                        ),
+                      ),
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                            child: const Text("Save"),
+                            onPressed: () {
+                              _saveAdd(titleController.text,
+                                  descriptionController.text);
+                            }))
+                  ],
+                ),
+              ),
+            ],
+          ));
+        });
+  }
+
+  Future<void> _saveAdd(String title, String description) async {
+    final quizProvider = QuizProvider();
+    try {
+      Quiz tmpQuiz = await quizProvider.addQuiz(title, description);
+      setState(() {
+        _quizzes.add(tmpQuiz);
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(e.toString()),
+      ));
+    } finally {
+      Navigator.of(context).pop();
+    }
   }
 }

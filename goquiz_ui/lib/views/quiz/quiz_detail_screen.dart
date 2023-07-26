@@ -27,29 +27,39 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_quiz.title),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: _showEditDialog,
+    return WillPopScope(
+        onWillPop: () async {
+          Navigator.pop(context, _quiz);
+          return true;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(_quiz.title),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: _showEditDialog,
+              ),
+              IconButton(
+                  icon: const Icon(Icons.play_arrow),
+                  onPressed: () {
+                    // TODO: Handle starting the quiz
+                  })
+            ],
           ),
-          IconButton(
-              icon: const Icon(Icons.play_arrow),
-              onPressed: () {
-                // TODO: Handle starting the quiz
-              })
-        ],
-      ),
-      body: _buildQuizQuestionsList(),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.pushNamed(context, AppRoutes.questionForm,
-                arguments: _quiz.id);
-          },
-          child: const Icon(Icons.add)),
-    );
+          body: _buildQuizQuestionsList(),
+          floatingActionButton: FloatingActionButton(
+              tooltip: "Add Question",
+              onPressed: () async {
+                Quiz tmpQuiz = await Navigator.pushNamed(
+                        context, AppRoutes.questionForm, arguments: _quiz.id)
+                    as Quiz;
+                setState(() {
+                  _quiz = tmpQuiz;
+                });
+              },
+              child: const Icon(Icons.add)),
+        ));
   }
 
   Widget _buildQuizQuestionsList() {
@@ -93,8 +103,9 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(e.toString()),
       ));
+    } finally {
+      Navigator.of(context).pop();
     }
-    Navigator.of(context).pop();
   }
 
   void _showEditDialog() {

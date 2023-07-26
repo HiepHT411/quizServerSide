@@ -98,7 +98,7 @@ class QuizProvider with ChangeNotifier {
     }
   }
 
-  Future<Question> addQuestion(
+  Future<Quiz> addQuestion(
       int quizID, String prompt, List<Answer> answers) async {
     var authToken = await authProvider.accessToken;
     final response = await http.post(
@@ -114,21 +114,68 @@ class QuizProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       notifyListeners();
-      return Question(
+      return Quiz(
         id: data['id'],
-        questionText: data['prompt'],
-        answers: (data['answers'] as List<dynamic>)
-            .map((json) => Answer(
+        title: data['title'],
+        description: data['description'],
+        questions: (data['questions'] as List<dynamic>)
+            .map((json) => Question(
                   id: json['id'],
-                  text: json['text'],
-                  correct: json['correct'],
+                  questionText: json['prompt'],
+                  answers: (json['answers'] as List<dynamic>)
+                      .map((json) => Answer(
+                            id: json['id'],
+                            text: json['text'],
+                            correct: json['correct'],
+                          ))
+                      .toList(),
+                  isMultipleChoice: true,
                 ))
             .toList(),
-        isMultipleChoice: true,
       );
     } else {
       log('Failed to add question: ${response.statusCode}');
       throw Exception('Failed to add question');
+    }
+  }
+
+  Future<Quiz> addQuiz(String title, String description) async {
+    var authToken = await authProvider.accessToken;
+    final response = await http.post(Uri.parse('$API_URL/quizzes'),
+        body: jsonEncode(<String, String>{
+          'title': title,
+          'description': description,
+        }),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $authToken'
+        });
+
+    if (response.statusCode == 201) {
+      final data = jsonDecode(response.body);
+      notifyListeners();
+      return Quiz(
+        id: data['id'],
+        title: data['title'],
+        description: data['description'],
+        questions: (data['questions'] as List<dynamic>)
+            .map((json) => Question(
+                  id: json['id'],
+                  questionText: json['prompt'],
+                  answers: (json['answers'] as List<dynamic>)
+                      .map((json) => Answer(
+                            id: json['id'],
+                            text: json['text'],
+                            correct: json['correct'],
+                          ))
+                      .toList(),
+                  isMultipleChoice: true,
+                ))
+            .toList(),
+      );
+    } else {
+      log('Failed to add quiz: ${response.statusCode}');
+      throw Exception('Failed to add quiz');
     }
   }
 }

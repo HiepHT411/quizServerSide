@@ -52,7 +52,14 @@ class _QuestionFormScreenState extends State<QuestionFormScreen> {
               ),
               const SizedBox(height: 16.0),
               ElevatedButton(
-                onPressed: () => _addQuestion(prompt, answers),
+                onPressed: () async {
+                  Quiz? tmpQuiz = await _addQuestion(prompt, answers);
+                  if (tmpQuiz != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Question added')));
+                    Navigator.pop(context, tmpQuiz);
+                  }
+                },
                 child: const Text('Add Question'),
               )
             ],
@@ -124,13 +131,13 @@ class _QuestionFormScreenState extends State<QuestionFormScreen> {
             )));
   }
 
-  void _addQuestion(String prompt, List<Answer> answers) {
+  Future<Quiz>? _addQuestion(String prompt, List<Answer> answers) {
     QuizProvider quizProvider = QuizProvider();
 
     if (prompt.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please enter a question prompt')));
-      return;
+      return null;
     }
     log(answerCount.toString());
     log(answers.toString());
@@ -138,16 +145,16 @@ class _QuestionFormScreenState extends State<QuestionFormScreen> {
       if (answer.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Please enter all answers')));
-        return;
+        return null;
       }
     }
 
     try {
-      quizProvider.addQuestion(widget.quizID, prompt, answers);
+      return quizProvider.addQuestion(widget.quizID, prompt, answers);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Failed to add question')));
-      return;
+      return null;
     }
   }
 }
