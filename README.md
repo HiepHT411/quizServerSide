@@ -4,6 +4,8 @@ GoQuiz is a side project developed to learn Flutter/Dart for the frontend and Ja
 
 ## Features
 
+![Application Features](https://www.github.com/gio-del/GoQuiz/blob/main/.github/assets/app.png)
+
 - User Registration: New users can sign up and create an account.
 - User Login: Existing users can log in to access the application's features.
 - JWT Authentication: Secure authentication using JSON Web Tokens.
@@ -61,6 +63,6 @@ git clone https://github.com/gio-del/GoQuiz.git
 
 WIP
 
-
 ## License
+
 [MIT](https://choosealicense.com/licenses/mit/)
