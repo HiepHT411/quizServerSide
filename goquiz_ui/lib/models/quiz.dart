@@ -12,4 +12,13 @@ class Quiz {
     required this.description,
     required this.questions,
   });
+
+  copyWith({required List<Question> questions}) {
+    return Quiz(
+      id: id,
+      title: title,
+      description: description,
+      questions: questions,
+    );
+  }
 }

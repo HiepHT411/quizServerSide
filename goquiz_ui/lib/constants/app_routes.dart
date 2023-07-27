@@ -7,4 +7,5 @@ class AppRoutes {
   static const String questionDetail = 'questionDetail';
   static const String questionForm = 'questionForm';
   static const String quizResult = 'quizResult';
+  static const String quizReview = 'quizReview';
 }

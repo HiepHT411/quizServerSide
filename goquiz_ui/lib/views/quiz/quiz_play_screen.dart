@@ -24,7 +24,6 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
     super.initState();
   }
 
-  // add some kind of feedback that there is another question, and the number of questions and answered questions
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +46,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
           ElevatedButton(
               onPressed: () {
                 Navigator.pushReplacementNamed(context, AppRoutes.quizResult,
-                    arguments: _resultCalculator.calculateResult());
+                    arguments: _resultCalculator);
               },
               child: const Text("Submit Quiz"))
         ],

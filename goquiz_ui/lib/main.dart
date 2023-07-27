@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:goquiz_ui/constants/app_routes.dart';
+import 'package:goquiz_ui/providers/result_calculator.dart';
 import 'package:goquiz_ui/views/auth/login_screen.dart';
 import 'package:goquiz_ui/views/auth/register_screen.dart';
 import 'package:goquiz_ui/views/question/question_detail_screen.dart';
@@ -8,10 +9,10 @@ import 'package:goquiz_ui/views/quiz/quiz_detail_screen.dart';
 import 'package:goquiz_ui/views/quiz/quiz_list_screen.dart';
 import 'package:goquiz_ui/views/quiz/quiz_play_screen.dart';
 import 'package:goquiz_ui/views/quiz/quiz_result_screen.dart';
+import 'package:goquiz_ui/views/quiz/quiz_review_screen.dart';
 
 import 'models/question.dart';
 import 'models/quiz.dart';
-import 'models/quiz_result.dart';
 
 void main() {
   runApp(const MyApp());
@@ -58,7 +59,11 @@ class MyApp extends StatelessWidget {
           case AppRoutes.quizResult:
             return MaterialPageRoute(
                 builder: (context) => QuizResultScreen(
-                    quizResult: settings.arguments as QuizResult));
+                    resultCalculator: settings.arguments as ResultCalculator));
+          case AppRoutes.quizReview:
+            return MaterialPageRoute(
+                builder: (context) => QuizReviewScreen(
+                    resultCalculator: settings.arguments as ResultCalculator));
           default:
             return MaterialPageRoute(builder: (context) => LoginScreen());
         }
