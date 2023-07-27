@@ -46,7 +46,8 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                   icon: const Icon(Icons.play_arrow),
                   tooltip: "Start Quiz",
                   onPressed: () {
-                    // TODO: Handle starting the quiz
+                    Navigator.pushNamed(context, AppRoutes.quizPlay,
+                        arguments: _quiz);
                   })
             ],
           ),

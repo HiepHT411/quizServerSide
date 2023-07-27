@@ -6,9 +6,12 @@ import 'package:goquiz_ui/views/question/question_detail_screen.dart';
 import 'package:goquiz_ui/views/question/question_form_screen.dart';
 import 'package:goquiz_ui/views/quiz/quiz_detail_screen.dart';
 import 'package:goquiz_ui/views/quiz/quiz_list_screen.dart';
+import 'package:goquiz_ui/views/quiz/quiz_play_screen.dart';
+import 'package:goquiz_ui/views/quiz/quiz_result_screen.dart';
 
 import 'models/question.dart';
 import 'models/quiz.dart';
+import 'models/quiz_result.dart';
 
 void main() {
   runApp(const MyApp());
@@ -44,11 +47,18 @@ class MyApp extends StatelessWidget {
               return QuestionFormScreen(
                   quizID: args.quizID, question: args.question);
             });
-
           case AppRoutes.questionDetail:
             return MaterialPageRoute(
                 builder: (context) => QuestionDetailScreen(
                     question: settings.arguments as Question));
+          case AppRoutes.quizPlay:
+            return MaterialPageRoute(
+                builder: (context) =>
+                    QuizPlayScreen(quiz: settings.arguments as Quiz));
+          case AppRoutes.quizResult:
+            return MaterialPageRoute(
+                builder: (context) => QuizResultScreen(
+                    quizResult: settings.arguments as QuizResult));
           default:
             return MaterialPageRoute(builder: (context) => LoginScreen());
         }
