@@ -46,7 +46,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
               style: const TextStyle(fontSize: 16)),
           ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.quizResult,
+                Navigator.pushReplacementNamed(context, AppRoutes.quizResult,
                     arguments: _resultCalculator.calculateResult());
               },
               child: const Text("Submit Quiz"))

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:goquiz_ui/constants/app_routes.dart';
 import 'package:goquiz_ui/models/quiz_result.dart';
@@ -37,7 +39,8 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, AppRoutes.quizList);
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      AppRoutes.quizList, (route) => false);
                 },
                 child: const Text("Back to Quiz List"))
           ],
