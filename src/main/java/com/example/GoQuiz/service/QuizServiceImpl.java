@@ -19,6 +19,11 @@ public class QuizServiceImpl implements QuizService{
     private final QuizRepository repository;
 
     @Override
+    public List<Quiz> getAllQuiz() {
+        return repository.findAll();
+    }
+
+    @Override
     public Quiz createQuiz(Quiz quiz) {
         return repository.save(quiz);
     }

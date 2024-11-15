@@ -34,7 +34,10 @@ public class QuizController {
         if (currentUser.isEmpty()) {
             throw new UserNotFoundException(String.format("User with username %s not found", userDetails.getUsername()));
         } else {
-            return currentUser.get().getQuizzes().stream().map(QuizDto::fromModel).collect(Collectors.toList());
+            if (currentUser.get().getRole().equals("ADMIN"))
+                return quizService.getAllQuiz().stream().map(QuizDto::fromModel).collect(Collectors.toList());
+            else
+                return currentUser.get().getQuizzes().stream().map(QuizDto::fromModel).collect(Collectors.toList());
         }
     }
 
@@ -99,7 +102,7 @@ public class QuizController {
         if (currentUser.isEmpty()) {
             throw new UserNotFoundException(String.format("User with username %s not found", userDetails.getUsername()));
         }
-        if(!quiz.get().getUser().equals(currentUser.get())){
+        if(!quiz.get().getUser().equals(currentUser.get()) && !currentUser.get().getRole().equals("ADMIN")){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not the owner of this quiz");
         }
         return quiz.get();

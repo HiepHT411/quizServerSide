@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface QuizService {
+    List<Quiz> getAllQuiz();
     Quiz createQuiz(Quiz quiz);
     List<Quiz> getAllQuizOfUser(Long userId);
     Quiz updateQuiz(Long id, QuizDto quizDto);
