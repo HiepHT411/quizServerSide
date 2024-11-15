@@ -31,6 +31,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        log.info("Received request: {} {}", request.getMethod(), request.getRequestURI());
         try {
             getJwtFromRequest(request)
                     .flatMap(jwtTokenProvider::validateTokenAndGetJws)

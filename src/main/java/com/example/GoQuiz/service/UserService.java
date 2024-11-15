@@ -15,5 +15,7 @@ public interface UserService {
     List<User> getAllUsers();
 
     void deleteUser(User user);
+
+    boolean validateVerificationToken(String token);
 }
 

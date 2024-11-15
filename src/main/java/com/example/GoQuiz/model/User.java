@@ -29,6 +29,8 @@ public class User {
 
     private boolean enabled;
 
+    private String verificationToken;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id")
     private List<Quiz> quizzes;

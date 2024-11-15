@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <style>
+        body {
+            line-height: 1.5;
+            font-size: 16px;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            margin: 0 25px;
+        }
+
+        td {
+            min-width: 250px;
+            padding: 0 5px;
+        }
+
+    </style>
+  </head>
+  <body>
+    <div>
+        <div>Dear <b>[[${username}]]</b>,</div>
+        <br/>
+        <div>SpaceX Pte. Ltd would like to send you the Trade Confirmation on your transaction date <b id="datetime"></b></div>
+        <div>Please kindly find the attached file for your reference.</div>
+        <br/>
+        <div>Click the link below to activate your account: </div>
+        <br/>
+        <div>[[${activateLink}]]</div>
+        <br/>
+        <div>If you find any discrepancy or inaccuracy, please do not hesitate to contact us via Contact center at my home or via email at hiephoang1@cqtdt.asia for SpaceX to hear up. Your comments are very important to us. </div>
+        <br/>
+        <div>Sincerely thank you for using SpaceX services.</div>
+        <br/>
+        <div>Best Regards,</div>
+        <div>SpaceX team</div>
+    </div>
+
+  </body>
+  <script>
+      // Get current date and time
+      var now = new Date();
+      var datetime = now.toLocaleString();
+
+      // Insert date and time into HTML
+      document.getElementById("datetime").innerHTML = datetime;
+  </script>
+</html>
