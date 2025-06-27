@@ -1,9 +1,7 @@
 package com.example.GoQuiz.controller;
 
 import com.example.GoQuiz.config.SecurityConfig;
-import com.example.GoQuiz.dto.AuthResponse;
-import com.example.GoQuiz.dto.LoginRequest;
-import com.example.GoQuiz.dto.SignupRequest;
+import com.example.GoQuiz.dto.*;
 import com.example.GoQuiz.exceptions.*;
 import com.example.GoQuiz.model.User;
 import com.example.GoQuiz.service.UserService;
@@ -13,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -35,15 +34,23 @@ public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/authenticate")
-    public AuthResponse login(@Valid @RequestBody LoginRequest loginRequest) {
-        Optional<User> userOpt = userService.getUserByEmail(loginRequest.getEmail());
-        if (userOpt.isEmpty()) {
-            throw new UserNotFoundException(String.format("User with email %s is not found", loginRequest.getEmail()));
+    public ResponseEntity<ResponseMetaData> login(@Valid @RequestBody LoginRequest loginRequest) {
+        try {
+            Optional<User> userOpt = userService.getUserByEmail(loginRequest.getEmail());
+            if (userOpt.isEmpty()) {
+                userOpt = userService.getUserByUsername(loginRequest.getEmail());
+                if (userOpt.isEmpty()) {
+                    return ResponseEntity.badRequest().body(new ResponseMetaData(new MetaDTO(MetaData.NOT_FOUND), String.format("User with email/username %s is not found", loginRequest.getEmail())));
+                }
+            }
+            if (!userOpt.get().isEnabled())
+                return ResponseEntity.status(MetaData.INACTIVE_ACCOUNT.getMetaCode()).body(new ResponseMetaData(new MetaDTO(MetaData.INACTIVE_ACCOUNT), String.format("User with email/username %s is disabled", loginRequest.getEmail())));
+
+            String token = authenticateAndGetToken(loginRequest.getEmail(), loginRequest.getPassword());
+            return ResponseEntity.ok(new ResponseMetaData(new MetaDTO(MetaData.SUCCESS), new AuthResponse(token)));
+        } catch (Exception e) {
+            return ResponseEntity.status(MetaData.UNAUTHORIZED.getMetaCode()).body(new ResponseMetaData(new MetaDTO(MetaData.UNAUTHORIZED), null));
         }
-        if (!userOpt.get().isEnabled())
-            throw new DeactivatedUserException(String.format("User with email %s is disabled", loginRequest.getEmail()));
-        String token = authenticateAndGetToken(loginRequest.getEmail(), loginRequest.getPassword());
-        return new AuthResponse(token);
     }
 
 
