@@ -35,6 +35,14 @@ public class User {
     @JoinColumn(name = "user_id")
     private List<Quiz> quizzes;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "user_id")
+    private List<Post> posts;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "user_id")
+    private List<Comment> comments;
+
     public static User from(UserDto userDto) {
         User user = new User();
         user.setUsername(userDto.getUsername());

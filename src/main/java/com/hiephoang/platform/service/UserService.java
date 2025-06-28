@@ -8,6 +8,8 @@ import java.util.Optional;
 public interface UserService {
     User createUser(User user);
 
+    User findByUsernameOrEmail(String usernameOrEmail);
+
     Optional<User> getUserByEmail(String email);
 
     Optional<User> getUserByUsername(String username);
