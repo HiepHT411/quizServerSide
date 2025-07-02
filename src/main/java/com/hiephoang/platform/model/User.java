@@ -4,12 +4,14 @@ import com.hiephoang.platform.dto.UserDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "users")
+@ToString(exclude = {"quizzes", "posts", "comments"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,8 +37,7 @@ public class User {
     @JoinColumn(name = "user_id")
     private List<Quiz> quizzes;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "user_id")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

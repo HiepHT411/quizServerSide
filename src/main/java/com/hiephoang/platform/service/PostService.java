@@ -2,12 +2,11 @@ package com.hiephoang.platform.service;
 
 import com.hiephoang.platform.dto.PostDTO;
 import com.hiephoang.platform.dto.PostRequest;
-import com.hiephoang.platform.dto.PostRequest;
-import com.hiephoang.platform.model.Post;
 import com.hiephoang.platform.model.Post;
 import com.hiephoang.platform.model.User;
 import com.hiephoang.platform.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +17,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -42,7 +42,8 @@ public class PostService {
                 .updateAt(createAt)
                 .build();
 
-        return new PostDTO(post);
+        log.info("Post created successfully: {}", post);
+        return new PostDTO(postRepository.save(post));
     }
 
     public boolean removePost(String id) {
@@ -69,8 +70,8 @@ public class PostService {
     }
 
     public List<PostDTO> getAllPosts() {
-
         List<Post> posts = postRepository.findAll();
+        log.info("Get all posts successfully: {}", posts);
         return posts.stream().map(PostDTO::new).toList();
     }
 

@@ -7,8 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 @Setter
 @Getter
@@ -22,8 +23,7 @@ public class PostDTO {
 
     private String body;
 
-    @JsonProperty("user_id")
-    private long userId;
+    private String username;
 
     @JsonProperty("comments")
     private List<CommentDTO> comments;
@@ -32,9 +32,9 @@ public class PostDTO {
         this.id = post.getId();
         this.title = post.getTitle();
         this.body = post.getBody();
-        this.userId = post.getUser().getId();
+        this.username = post.getUser().getUsername();
 
-        this.comments = post.getComments().stream()
+        this.comments = Objects.isNull(post.getComments()) ? Collections.emptyList() : post.getComments().stream()
                 .map(CommentDTO::toCommentDTO)
                 .toList();
     }

@@ -57,7 +57,7 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseMetaData> getPost() {
+    public ResponseEntity<ResponseMetaData> getPosts() {
         try {
             List<PostDTO> posts = postService.getAllPosts();
 
